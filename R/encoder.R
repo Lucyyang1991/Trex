@@ -6,7 +6,13 @@
                      encoder.model = encoder.model) { 
   return <- list() ### Need to add reference data
   reference <- Trex.Data[[1]] #AA properties
-  col.ref <- grep(tolower(paste(encoder.input, collapse = "|")), colnames(reference))
+  
+  if (encoder.input == "both") {
+  col.ref <- grep(tolower(paste(c("AF", "KF"), collapse = "|")), colnames(reference))
+  } else {
+    col.ref <- grep(tolower(paste(encoder.input, collapse = "|")), colnames(reference))
+  }
+  
   length <- NULL
   column.ref <- unique(sort(col.ref))
 
@@ -25,7 +31,7 @@
       if(encoder.input == "OHE") {
         int <- one.hot.organizer(refer)
         array.reshape.tmp <- array_reshape(int, 1260)
-      }else {
+      } else {
         int <- reference[match(refer, reference$aa),c(1,col.ref)]
         int <- as.matrix(int[,-1])
         array.reshape.tmp <- array_reshape(int, length(col.ref)*60)
